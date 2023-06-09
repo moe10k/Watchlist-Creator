@@ -8,6 +8,12 @@ function getTotal($arr) {
     $total = 0.00;
     //TODO do adding here
     //TODO do rounding stuff here
+    //mk42 - 6/5
+    foreach ($arr as $i) {
+        $total += $i;
+    }
+
+    $total = round($total, 2);
     echo "The total is " . var_export($total, true);
 }
 echo "Problem 2: Adding Floats<br>";
