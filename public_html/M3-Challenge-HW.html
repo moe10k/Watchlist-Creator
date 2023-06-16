@@ -13,13 +13,48 @@
             setTimeout(() => {
                 //added this delay here as some solutions may require it to update properly (i.e., click code may complete before the navigation changes)
                 //TODO: add code for processing the current selection 
-
                 //Note: likely you'll want to call updateCurrentPage towards the end
+                
             }, 100);
         }
     </script>
     <style>
         /* TODO: make edits here */
+        nav{
+            background-color: lightblue;
+        }
+
+        nav ul li {
+            display: inline-block;
+            margin-right: 5px;
+            list-style-type: none;
+        }
+
+        a:hover{
+            color: orange;
+        }
+
+        li{
+            list-style-type: none;
+            margin-right: 10px;
+        }
+
+        li::before{
+            content: "✓";
+        }
+
+        h1::first-letter{
+            text-transform: uppercase;
+        }
+
+        nav ul li a::first-letter::first-letter{
+            text-transform: uppercase;
+        }
+
+        body li{
+            color: red;
+        }
+
     </style>
     <!-- make the necessary edits above this line -->
 
