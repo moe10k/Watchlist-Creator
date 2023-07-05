@@ -201,14 +201,26 @@
             //left side of ball passes left side of paddle
             if (ball.x < leftPaddle.x) {
                 rightScore++;
+                if (rightScore > 2){
+                    rightPaddle.h = paddleHeight * 1.5; //mk42                       
+                }
                 resetBall();
             }
             //right side of ball passes right side of paddle 
             else if (ball.x + ball.w > rightPaddle.x + rightPaddle.w) {
                 leftScore++;
+                if (leftScore > 2){
+                    leftPaddle.h = paddleHeight * 1.5; //mk42
+                }
                 resetBall();
             }
+
+            if (leftScore > 4 || rightScore > 4) {
+                ball.w = ball.h = ballSize * 1.5;  // Increase ball size by 50%
+            }
+
         }
+
         function drawScores() {
             // Draw the scores
             context.fillStyle = '#000000';
