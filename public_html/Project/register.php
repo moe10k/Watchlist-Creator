@@ -30,14 +30,14 @@ reset_session();
         let password = form.password.value;
         let confirm = form.confirm.value;
         let regexforemail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        let regexforusername = /^[a-zA-Z0-9_-]{3,30}$/;
+        let regexforusername = /^[a-zA-Z0-9_-]{3,16}$/;
 
         if (!regexforemail.test(email)) {
             alert('Enter a valid email.');
             return false;
         }
         if (!regexforusername.test(username)) {
-            alert('Username must only contain 3-30 characters a-z, 0-9, _, or -');
+            alert('Username must only contain 3-16 characters a-z, 0-9, _, or -');
             return false;
         }
         if (password.length < 8) {

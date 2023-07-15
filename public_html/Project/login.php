@@ -19,7 +19,7 @@ require_once(__DIR__ . "/../../partials/nav.php");
         let email = form.email.value;
         let password = form.password.value;
         let regexforemail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        let regexforusername = /^[a-zA-Z0-9_-]{3,15}$/;
+        let regexforusername = /^[a-zA-Z0-9_-]{3,16}$/;
  
         if (!regexforemail.test(email) && !regexforusername.test(email)) {
             alert('Enter a valid email or username.');
