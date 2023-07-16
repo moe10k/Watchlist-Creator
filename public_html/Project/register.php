@@ -33,19 +33,19 @@ reset_session();
         let regexforusername = /^[a-zA-Z0-9_-]{3,16}$/;
 
         if (!regexforemail.test(email)) {
-            alert('Enter a valid email.');
+            flash('Enter a valid email.');
             return false;
         }
         if (!regexforusername.test(username)) {
-            alert('Username must only contain 3-16 characters a-z, 0-9, _, or -');
+            flash('Username must only contain 3-16 characters a-z, 0-9, _, or -');
             return false;
         }
         if (password.length < 8) {
-            alert('Password must be at least 8 characters long.');
+            flash('Password must be at least 8 characters long.');
             return false;
         }
         if (password !== confirm) {
-            alert('Passwords must match.');
+            flash('Passwords must match.');
             return false;
         }
 

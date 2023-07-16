@@ -22,11 +22,11 @@ require_once(__DIR__ . "/../../partials/nav.php");
         let regexforusername = /^[a-zA-Z0-9_-]{3,16}$/;
  
         if (!regexforemail.test(email) && !regexforusername.test(email)) {
-            alert('Enter a valid email or username.');
+            flash('Enter a valid email or username.');
             return false;
         }
         if (password.length < 8) {
-            alert('Password must be at least 8 characters long.');
+            flash('Password must be at least 8 characters long.');
             return false;
         }
         return true;
