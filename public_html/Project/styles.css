@@ -1,23 +1,77 @@
 .alert-success {
-    background-color: green
+    background-color: #98FB98; 
+    color: black; 
+    padding: 5px; 
+    border-radius: 5px; 
+    display: inline-block;
+    font-weight: bold; 
 }
 
 .alert-warning {
-    background-color: yellow;
+    background-color: #e6f66dee; 
+    color: black; 
+    padding: 5px; 
+    border-radius: 5px; 
+    display: inline-block;
+    font-weight: bold; 
 }
 
 .alert-danger {
-    background-color: red;
+    background-color: red; 
+    color: black; 
+    padding: 5px; 
+    border-radius: 5px; 
+    display: inline-block;
+    font-weight: bold; 
 }
 
 .alert-info {
-    background-color: teal;
+    background-color: lightcoral; 
+    color: black; 
+    padding: 5px; 
+    border-radius: 5px; 
+    display: inline-block;
+    font-weight: bold; 
 }
 nav li{display: inline;}
 nav li a{color: blue}
 
-body{
-    background-color: gray;
-    font-family: 'Courier New', Courier, monospace;
 
+body{
+    background-color: rgb(128, 128, 128);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+form {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f8f8;
+}
+
+form input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+form input[type="email"],
+form input[type="text"],
+form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
