@@ -53,13 +53,21 @@ if (isset($_POST['search'])) {
         $data = json_decode($response, true);
 
         if (isset($data['d'])) {
+            echo '<form method="POST" action="add_to_watchlist.php">';
             echo '<ul>';
             foreach ($data['d'] as $movie) {
                 echo '<li>';
+                echo '<input type="checkbox" name="movies[]" value="'. htmlspecialchars($movie["l"]) .'" />';
                 echo 'Title: ' . htmlspecialchars($movie["l"]), "<br>";
+                if (isset($movie["i"]["imageUrl"])) {
+                    echo '<img src="' . htmlspecialchars($movie["i"]["imageUrl"]) . '" alt="Movie Poster" style="max-width: 200px; max-height: 300px;">', "<br><br><br>";
+                    echo '<input type="hidden" name="images[]" value="' . htmlspecialchars($movie["i"]["imageUrl"]) . '">';
+                }
                 echo '</li>';
             }
             echo '</ul>';
+            echo '<input type="submit" value="Add to Watchlist" />';
+            echo '</form>';
         } else {
             echo 'No movies found.';
         }

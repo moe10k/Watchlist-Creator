@@ -9,6 +9,11 @@ if (is_logged_in(true)) {
     error_log("Session data: " . var_export($_SESSION, true));
 }
 ?>
+<ul>
+    <li>Search for Movies</li>
+    <li>Add to your Watchlist</li>
+    <li>Find out any info you want from a wide range of movies!</li>
+</ul>
 <?php
 require(__DIR__ . "/../../partials/flash.php");
 ?>
