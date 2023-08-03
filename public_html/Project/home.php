@@ -1,6 +1,8 @@
 <?php
 require(__DIR__ . "/../../partials/nav.php");
 ?>
+
+<div id="home-page">
 <h1>Home</h1>
 <?php
 
@@ -10,10 +12,11 @@ if (is_logged_in(true)) {
 }
 ?>
 <ul>
-    <li>Search for Movies</li>
-    <li>Add to your Watchlist</li>
-    <li>Find out any info you want from a wide range of movies!</li>
+    <li>Make a List of Movies you want to Watch and Find out more about!</li>
+    <li>Search for Movies under Dashboard</li>
+    <li>Select and Add Movies to your Watchlist</li>
 </ul>
+</div>
 <?php
 require(__DIR__ . "/../../partials/flash.php");
 ?>

@@ -2,8 +2,10 @@
 
 require(__DIR__ . "/../../partials/nav.php");
 ?>
-<h1>Watchlist</h1>
 
+
+<div id="watchlist-page-body">
+<h1>Watchlist</h1>
 <?php
 
 if (is_logged_in(true)) {
@@ -20,10 +22,10 @@ $stmt->execute([":user_id" => $user_id]);
 $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if ($movies) {
-    echo '<ul>';
+    echo '<ul id = "watchlist-content">';
     foreach ($movies as $movie) {
         echo '<li>';
-        echo 'Title: ' . htmlspecialchars($movie["movie_title"]), "<br>";
+        echo '<h2 class="movie-title">' . htmlspecialchars($movie["movie_title"]), "<br>";
         if ($movie["image_url"]) {
             echo '<img src="' . htmlspecialchars($movie["image_url"]) . '" alt="Movie Poster" style="max-width: 200px; max-height: 300px;">', "<br><br><br>";
         }
@@ -33,6 +35,9 @@ if ($movies) {
 } else {
     echo 'No movies in your watchlist.';
 }
+?>
+</div>
 
+<?php
 require(__DIR__ . "/../../partials/flash.php");
 ?>
