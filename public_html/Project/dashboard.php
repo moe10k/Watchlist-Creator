@@ -84,7 +84,7 @@ require(__DIR__ . "/../../partials/flash.php");
         var checkboxes = document.querySelectorAll('input[type="checkbox"]');
         var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
         if (!checkedOne) {
-            flash('No movies selected. Please select a movie before adding to watchlist.');
+            flash('No movies selected. Please select a movie before adding to watchlist.', "danger");
             return false;
         }
         return true;
