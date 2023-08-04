@@ -2,8 +2,7 @@
 require(__DIR__ . "/../../partials/nav.php");
 ?>
 
-<div id="watchlist-page-body">
-<h1>Watchlist</h1>
+
 <?php
 
 if (is_logged_in(true)) {
@@ -16,6 +15,7 @@ $db = getDB();
 
 if (isset($_POST["remove_movies"])) {
     $movies_to_remove = $_POST["remove_movies"];
+    flash('Movie Successfully Removed', "success");
     
     $inQuery = implode(',', array_fill(0, count($movies_to_remove), '?'));
     array_unshift($movies_to_remove, $user_id);
@@ -31,25 +31,27 @@ $stmt->execute([$user_id]);
 $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if ($movies) {
-    echo '<form method="POST" onsubmit="return checkForm()">';
-    echo '<ul id = "watchlist-content">';
+    echo '<h1 class="watchlist-title">My Watchlist</h1>';
+    echo '<form id="watchlist-form" method="POST" onsubmit="return checkForm()">';
+    echo '<div id="watchlist-content">';
+    echo '<ul>';
     foreach ($movies as $movie) {
         echo '<li>';
         echo '<input type="checkbox" name="remove_movies[]" value="' . htmlspecialchars($movie["movie_title"]) . '">';
-        echo '<h2 class="movie-title">' . htmlspecialchars($movie["movie_title"]), "<br>";
+        echo '<h2 class="movie-title">' . htmlspecialchars($movie["movie_title"]) . '</h2>';
         if ($movie["image_url"]) {
-            echo '<img src="' . htmlspecialchars($movie["image_url"]) . '" alt="Movie Poster" style="max-width: 200px; max-height: 300px;">', "<br><br><br>";
+            echo '<img src="' . htmlspecialchars($movie["image_url"]) . '" alt="Movie Poster" style="max-width: 200px; max-height: 300px;"><br><br><br>';
         }
         echo '</li>';
     }
     echo '</ul>';
+    echo '</div>';
     echo '<input type="submit" value="Remove Selected Movies">';
     echo '</form>';
 } else {
     echo 'No movies in your watchlist.';
 }
 ?>
-</div>
 
 <?php
 require(__DIR__ . "/../../partials/flash.php");
@@ -61,9 +63,9 @@ require(__DIR__ . "/../../partials/flash.php");
         var checkboxes = document.querySelectorAll('input[type="checkbox"]');
         var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
         if (!checkedOne) {
-            flash('No movies selected. Please select a movie before removing from watchlist.');
+            flash('No movies selected. Please select a movie before removing from watchlist.', "danger");
             return false; 
         }
-        return true; 
+        return true;
     }
 </script>
