@@ -10,7 +10,7 @@ if (isset($_POST["movies"]) && isset($_POST["images"])) {
     $movies = $_POST["movies"];
     $images = $_POST["images"];
     
-    $user_id = get_user_id(); // This function should return the id of the currently logged in user
+    $user_id = get_user_id(); 
 
     $db = getDB();
 
