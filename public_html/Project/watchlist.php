@@ -31,7 +31,7 @@ $stmt->execute([$user_id]);
 $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if ($movies) {
-    echo '<form method="POST" action="remove_from_watchlist.php" onsubmit="return checkForm()">';
+    echo '<form method="POST" onsubmit="return checkForm()">';
     echo '<ul id = "watchlist-content">';
     foreach ($movies as $movie) {
         echo '<li>';
