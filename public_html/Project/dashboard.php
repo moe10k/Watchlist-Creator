@@ -53,8 +53,8 @@ if (isset($_POST['search'])) {
         $data = json_decode($response, true);
 
         if (isset($data['d'])) {
-            echo '<form method="POST" action="add_to_watchlist.php">';
-            echo '<ul>';
+            echo '<form method="POST" action="add_to_watchlist.php" onsubmit="return checkForm()">';
+            echo '<ul id="movies">';
             foreach ($data['d'] as $movie) {
                 echo '<li>';
                 echo '<input type="checkbox" name="movies[]" value="'. htmlspecialchars($movie["l"]) .'" />';
@@ -74,6 +74,19 @@ if (isset($_POST['search'])) {
     }
 }
 
+
 require(__DIR__ . "/../../partials/flash.php");
 
 ?>
+
+<script>
+    function checkForm() {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
+        if (!checkedOne) {
+            flash('No movies selected. Please select a movie before adding to watchlist.');
+            return false;
+        }
+        return true;
+    }
+</script>

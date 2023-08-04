@@ -31,7 +31,7 @@ $stmt->execute([$user_id]);
 $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if ($movies) {
-    echo '<form method="POST">';
+    echo '<form method="POST" action="remove_from_watchlist.php" onsubmit="return checkForm()">';
     echo '<ul id = "watchlist-content">';
     foreach ($movies as $movie) {
         echo '<li>';
@@ -54,3 +54,16 @@ if ($movies) {
 <?php
 require(__DIR__ . "/../../partials/flash.php");
 ?>
+
+
+<script>
+    function checkForm() {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
+        if (!checkedOne) {
+            flash('No movies selected. Please select a movie before removing from watchlist.');
+            return false; 
+        }
+        return true; 
+    }
+</script>
