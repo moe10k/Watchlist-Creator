@@ -29,7 +29,7 @@ if (isset($_POST["movies"]) && isset($_POST["images"])) {
         }
     }
 
-    flash("Movies successfully added to watchlist");
+    flash("Movies successfully added to watchlist", "success");
     die(header("Location: watchlist.php"));
 }
 ?>

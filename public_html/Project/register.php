@@ -2,7 +2,8 @@
 require(__DIR__ . "/../../partials/nav.php");
 reset_session();
 ?>
-<form onsubmit="return validate(this)" method="POST">
+<form id="register" onsubmit="return validate(this)" method="POST">
+    <h1>Register</h1>
     <div>
         <label for="email">Email</label>
         <input type="email" name="email" required />
