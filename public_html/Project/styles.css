@@ -36,7 +36,7 @@
 
 nav {
     text-align: center;
-    background-color: #333;  /* this is a dark grey color */
+    background-color: #333;  
     padding: 10px 0;
 }
 
@@ -46,13 +46,13 @@ nav li{
 }
 
 nav li a{
-    color: #fff;  /* make the text color white */
-    text-decoration: none;  /* remove the underline */
+    color: #fff; 
+    text-decoration: none;  
     font-size: 18px;
 }
 
 nav a:hover {
-    color: #ddd;  /* change color on hover for a nice effect */
+    color: #ddd; 
 }
 
 
@@ -116,10 +116,10 @@ form input[type="password"] {
 #login input[type="email"],
 #login input[type="text"],
 #login input[type="password"] {
-    padding: 15px;    /* Increase input field size */
-    font-size: 18px;  /* Increase font size */
-    margin-bottom: 30px;  /* Add space between fields */
-    width: 100%;  /* Make the input fields take up the full width of the form */
+    padding: 15px;   
+    font-size: 18px;  
+    margin-bottom: 30px;  
+    width: 100%;  
 }
 
 #register{
@@ -131,10 +131,10 @@ form input[type="password"] {
 #register input[type="email"],
 #register input[type="text"],
 #register input[type="password"] {
-    padding: 15px;    /* Increase input field size */
-    font-size: 18px;  /* Increase font size */
-    margin-bottom: 30px;  /* Add space between fields */
-    width: 100%;  /* Make the input fields take up the full width of the form */
+    padding: 15px;   
+    font-size: 18px;  
+    margin-bottom: 30px;  
+    width: 100%;  
 }
 
 #profile{
@@ -146,10 +146,10 @@ form input[type="password"] {
 #profile input[type="email"],
 #profile input[type="text"],
 #profile input[type="password"] {
-    padding: 15px;    /* Increase input field size */
-    font-size: 18px;  /* Increase font size */
-    margin-bottom: 30px;  /* Add space between fields */
-    width: 100%;  /* Make the input fields take up the full width of the form */
+    padding: 15px;    
+    font-size: 18px;  
+    margin-bottom: 30px;  
+    width: 100%;  
 }
 
 
@@ -159,7 +159,7 @@ form input[type="password"] {
 
 
 form#watchlist-form {
-    max-width: 2000px;  /* Adjust this value to make your form wider or narrower */
+    max-width: 2000px;  
     box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
 }
 
