@@ -14,7 +14,6 @@ if (isset($_POST["movies"]) && isset($_POST["images"])) {
     $db = getDB();
 
     for ($i = 0; $i < count($movies); $i++) {
-        // Check if the movie already exists in the user's watchlist
         $stmt = $db->prepare("SELECT 1 FROM Watchlist WHERE user_id = :user_id AND movie_title = :movie_title");
         $stmt->execute([":user_id" => $user_id, ":movie_title" => $movies[$i]]);
         $exists = $stmt->fetchColumn();
@@ -22,7 +21,6 @@ if (isset($_POST["movies"]) && isset($_POST["images"])) {
         if ($exists) {
             flash("'$movies[$i]' is already in your watchlist.", 'warning');
         } else {
-            // If movie not in watchlist, then insert it
             $stmt = $db->prepare("INSERT INTO Watchlist (user_id, movie_title, image_url) VALUES (:user_id, :movie_title, :image_url)");
             $r = $stmt->execute([
                 ":user_id" => $user_id,
