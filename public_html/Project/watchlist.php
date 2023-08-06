@@ -64,6 +64,9 @@ if ($movies) {
         if ($movie["image_url"]) {
             echo '<img src="' . htmlspecialchars($movie["image_url"]) . '" alt="Movie Poster" style="max-width: 200px; max-height: 300px;"><br><br><br>';
         }
+        echo '<label for="rating-' . htmlspecialchars($movie["movie_title"]) . '">Rate:</label>';
+        echo '<input type="number" name="rating[' . htmlspecialchars($movie["movie_title"]) . ']" min="1" max="10" id="rating-' . htmlspecialchars($movie["movie_title"]) . '">';
+        echo '<button type="button" onclick="submitRating(\'' . htmlspecialchars($movie["movie_title"]) . '\')">Submit Rating</button>';
         echo '</li>';
     }
     echo '</ul>';
@@ -95,4 +98,26 @@ require(__DIR__ . "/../../partials/flash.php");
         flash('Please enter a positive number that is greater than 0', "danger");
     }
 });
+
+function submitRating(movieTitle) {
+    var rating = document.getElementById('rating-' + movieTitle).value;
+    
+    if (rating < 1 || rating > 10) {
+        flash('Rating must be between 1 and 10', 'warning');
+        return;
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'save_ratings.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            flash('Rating saved successfully!', 'success');
+        }
+    };
+
+    var params = 'movie_title=' + encodeURIComponent(movieTitle) + '&rating=' + encodeURIComponent(rating);
+    xhr.send(params);
+}
 </script>
