@@ -32,6 +32,7 @@ if (isset($_POST["movies"]) && isset($_POST["images"])) {
                 flash("There was a problem saving '$movies[$i]'. Please try again.", 'danger');
             } else {
                 flash("'$movies[$i]' added to watchlist.", 'success');
+                die(header("Location: watchlist.php"));
             }
         }
     }
