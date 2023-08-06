@@ -2,7 +2,8 @@
 require(__DIR__ . "/../../partials/nav.php");
 reset_session();
 ?>
-<form onsubmit="return validate(this)" method="POST">
+<form id="register" onsubmit="return validate(this)" method="POST">
+    <h1>Register</h1>
     <div>
         <label for="email">Email</label>
         <input type="email" name="email" required />
@@ -13,11 +14,11 @@ reset_session();
     </div>
     <div>
         <label for="pw">Password</label>
-        <input type="password" id="pw" name="password" required minlength="8" />
+        <input type="password" id="pw" name="password" />
     </div>
     <div>
         <label for="confirm">Confirm</label>
-        <input type="password" name="confirm" required minlength="8" />
+        <input type="password" name="confirm" />
     </div>
     <input type="submit" value="Register" />
 </form>
