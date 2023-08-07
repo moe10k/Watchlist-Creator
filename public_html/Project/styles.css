@@ -155,7 +155,9 @@ form input[type="password"] {
 
 
 
-
+#dashboard{
+    background: url('movie_background.jpg') no-repeat center center fixed;
+}
 
 
 form#watchlist-form {

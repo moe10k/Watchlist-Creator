@@ -32,12 +32,11 @@ if (isset($_POST["movies"]) && isset($_POST["images"])) {
                 flash("There was a problem saving '$movies[$i]'. Please try again.", 'danger');
             } else {
                 flash("'$movies[$i]' added to watchlist.", 'success');
-                die(header("Location: watchlist.php"));
             }
         }
     }
 
     // Redirect back to dashboard after processing, may remove this later on
-    die(header("Location: dashboard.php"));
+    die(header("Location: watchlist.php"));
 }
 ?>

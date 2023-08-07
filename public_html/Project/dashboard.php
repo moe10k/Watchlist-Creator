@@ -3,13 +3,17 @@
 
 require(__DIR__ . "/../../partials/nav.php");
 ?>
+
+<body id = 'dashboard'>
 <h1>Dashboard</h1>
+</body>
+
 
 
 <form method="POST">
     <div>
         <label for="search">Search</label>
-        <input type="text" name="search" required />
+        <input type="text" name="search" placeholder="Search for Any Movie or Show..." required />
     </div>
     <input type="submit" value="Search" />
 </form>
