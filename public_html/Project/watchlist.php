@@ -25,12 +25,32 @@ if (isset($_POST['filter'])) {
 $limit = 10; // default limit
 if (isset($_POST['limit']) && is_numeric($_POST['limit']) && $_POST['limit'] > 0) {
     $limit = (int)$_POST['limit']; 
+    flash("Showing $limit movies", "success");
+}
+
+if ($limit < 1 || $limit > 100) {
+    flash('Not within range of 1-100', 'warning'); //mk42 - 8/7 - server side validation to default limit to 10
+    $limit = 10;
 }
 
 $query = "SELECT movie_title, image_url FROM Watchlist WHERE user_id = :user_id ORDER BY created $order LIMIT $limit";
 $stmt = $db->prepare($query);
 $stmt->execute([":user_id" => $user_id]);
 $movies = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$userQuery = "SELECT username FROM Users WHERE id = :user_id";
+$userStmt = $db->prepare($userQuery);
+$userStmt->execute([":user_id" => $user_id]);
+$username = $userStmt->fetchColumn();
+
+
+$countQuery = "SELECT COUNT(*) FROM Watchlist WHERE user_id = :user_id";
+$stmt = $db->prepare($countQuery);
+$stmt->execute([":user_id" => $user_id]);
+$totalMovies = $stmt->fetchColumn();
+echo "<h1 id='watchlisttitle'>$username's Watchlist (Total: $totalMovies)</h1>";
+
+
 
 ?>
 
@@ -53,7 +73,7 @@ if (is_logged_in(true)) {
 }
 
 if ($movies) {
-    echo '<h1 class="watchlist-title">My Watchlist</h1>';
+    echo '<h1 class="movie-title">Movies</h1>';
     echo '<form id="watchlist-form" method="POST" onsubmit="return checkForm()">';
     echo '<div id="watchlist-content">';
     echo '<ul>';
@@ -62,8 +82,10 @@ if ($movies) {
         echo '<input type="checkbox" name="remove_movies[]" value="' . htmlspecialchars($movie["movie_title"]) . '">';
         echo '<h2 class="movie-title">' . htmlspecialchars($movie["movie_title"]) . '</h2>';
         if ($movie["image_url"]) {
-            echo '<img src="' . htmlspecialchars($movie["image_url"]) . '" alt="Movie Poster" style="max-width: 200px; max-height: 300px;"><br><br><br>';
+            echo '<img src="' . htmlspecialchars($movie["image_url"]) . '" alt="Movie Poster" style="max-width: 200px; max-height: 300px;">';
+            echo '<a href="movie_details.php?movie_title=' . urlencode($movie['movie_title']) . '">View Details</a>';
         }
+
         echo '<label for="rating-' . htmlspecialchars($movie["movie_title"]) . '">Rate:</label>';
         echo '<input type="number" name="rating[' . htmlspecialchars($movie["movie_title"]) . ']" min="1" max="10" id="rating-' . htmlspecialchars($movie["movie_title"]) . '">';
         echo '<button type="button" onclick="submitRating(\'' . htmlspecialchars($movie["movie_title"]) . '\')">Submit Rating</button>';
