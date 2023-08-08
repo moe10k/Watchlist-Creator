@@ -3,13 +3,17 @@
 
 require(__DIR__ . "/../../partials/nav.php");
 ?>
+
+<body id = 'dashboard'>
 <h1>Dashboard</h1>
+</body>
 
 
-<form method="POST">
+
+<form id='dashboardsearch' method="POST">
     <div>
         <label for="search">Search</label>
-        <input type="text" name="search" required />
+        <input id='dashboardbutton' type="text" name="search" placeholder="Search for Any Movie or Show..." required />
     </div>
     <input type="submit" value="Search" />
 </form>
@@ -54,10 +58,23 @@ if (isset($_POST['search'])) {
 
         if (isset($data['d'])) {
             echo '<form method="POST" action="add_to_watchlist.php" onsubmit="return checkForm()">';
+            echo '<input type="submit" value="Add to Watchlist" id="dashboardaddbutton"/>';
             echo '<ul id="movies">';
             foreach ($data['d'] as $movie) {
                 echo '<li>';
                 echo '<input type="checkbox" name="movies[]" value="'. htmlspecialchars($movie["l"]) .'" />';
+                if (isset($movie["y"])) {
+                    echo '<input type="hidden" name="yearrelease[]" value="'. htmlspecialchars($movie["y"]) .'" />';
+                }
+                if (isset($movie["yr"])) {
+                    echo '<input type="hidden" name="yearplayed[]" value="'. htmlspecialchars($movie["yr"]) .'" />';
+                }
+                if (isset($movie["qid"])) {
+                    echo '<input type="hidden" name="type[]" value="'. htmlspecialchars($movie["qid"]) .'" />';
+                }
+                if (isset($movie["s"])) {
+                    echo '<input type="hidden" name="famousactors[]" value="'. htmlspecialchars($movie["s"]) .'" />';
+                }
                 echo 'Title: ' . htmlspecialchars($movie["l"]), "<br>";
                 if (isset($movie["i"]["imageUrl"])) {
                     echo '<img src="' . htmlspecialchars($movie["i"]["imageUrl"]) . '" alt="Movie Poster" style="max-width: 200px; max-height: 300px;">', "<br><br><br>";
@@ -66,7 +83,6 @@ if (isset($_POST['search'])) {
                 echo '</li>';
             }
             echo '</ul>';
-            echo '<input type="submit" value="Add to Watchlist" />';
             echo '</form>';
         } else {
             echo 'No movies found.';
