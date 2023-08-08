@@ -4,7 +4,7 @@ h1
     line-height: 150px;
 
     font-family:"Segoe print", Arial, Helvetica, sans-serif;
-    color: whitesmoke; 
+    color: black; 
 
     font-weight:lighter;
     text-align:center;
@@ -247,6 +247,12 @@ form#watchlist-form {
     max-width: 90%;
     max-height: 70%;
     object-fit: contain;
+}
+
+#removeallbutton {
+    display: block;
+    margin: 0 auto;
+    background-color: red;
 }
 
 
