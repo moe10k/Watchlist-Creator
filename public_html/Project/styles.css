@@ -1,3 +1,18 @@
+h1
+{
+    font-size: 32px;
+    line-height: 150px;
+
+    font-family:"Segoe print", Arial, Helvetica, sans-serif;
+    color: whitesmoke; 
+
+    font-weight:lighter;
+    text-align:center;
+ 
+}
+
+
+
 .alert-success {
     background-color: #98FB98; 
     color: black; 
@@ -159,16 +174,41 @@ form input[type="password"] {
     background: url('movie_background.jpg') no-repeat center center fixed;
 }
 
+#dashboardsearch{
+    display: flex;
+    align-items: center;
+
+}
+
+#dashboardbutton{
+    margin-right: 400px;    
+    margin-top: 10px;
+}
+
+#dashboardaddbutton{
+    background-color: rgb(76, 76, 220);
+}
+
+
+
+
+
+
+#watchlisttitle{
+    text-align: center;
+    
+}
 
 form#watchlist-form {
     max-width: 2000px;  
     box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
 }
 
-.watchlist-title {
+.movie-title {
     text-align: center;
     font-size: 2em;
     margin-bottom: 20px;
+    color: rgba(36, 36, 215, 0.445);
 }
 
 #watchlist-content {
@@ -188,7 +228,7 @@ form#watchlist-form {
 
 #watchlist-content ul li {
     width: 500px;
-    height: 500px;
+    height: 550px;
     flex: 0 0 auto;
     padding: 10px;
     margin: 10px;
@@ -196,7 +236,7 @@ form#watchlist-form {
     border: 1px solid #ccc;
     border-radius: 10px;
     box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+    background-color: whitesmoke;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
