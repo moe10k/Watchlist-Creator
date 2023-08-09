@@ -333,3 +333,18 @@ form#watchlist-form {
 }
 
 
+
+
+
+.assignmoviescontainer {
+    display: flex;
+}
+
+.column {
+    flex: 1; 
+    padding: 10px; 
+}
+
+
+
+
