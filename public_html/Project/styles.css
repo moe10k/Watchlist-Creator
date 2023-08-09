@@ -315,3 +315,36 @@ form#watchlist-form {
     background-color: #0056b3;
 }
 
+
+
+
+
+
+
+#movies-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+}
+
+.movie {
+    margin: 15px;
+    text-align: center;
+}
+
+
+
+
+
+.assignmoviescontainer {
+    display: flex;
+}
+
+.column {
+    flex: 1; 
+    padding: 10px; 
+}
+
+
+
+
