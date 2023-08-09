@@ -2,7 +2,23 @@
 require(__DIR__ . "/../../partials/nav.php");
 $db = getDB();
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['rating']) && isset($_POST['user_id']) && isset($_POST['movie_title'])) {
+    if (has_role("Admin")) {
+        $rating = (int)$_POST['rating'];
+        $user_id = (int)$_POST['user_id'];
+        $movie_title = $_POST['movie_title'];
 
+        if ($rating >= 1 && $rating <= 10) {
+            $stmt = $db->prepare("UPDATE Ratings SET rating = :rating WHERE user_id = :user_id AND movie_title = :movie_title");
+            $stmt->execute([":rating" => $rating, ":user_id" => $user_id, ":movie_title" => $movie_title]);
+            flash('Rating updated successfully!', 'success');
+        } else {
+            flash('Rating must be between 1 and 10', 'danger');
+        }
+    } else {
+        flash('You do not have permission to update ratings', 'danger');
+    }
+}
 
 $total_ratings_query = "SELECT COUNT(*) as total_ratings FROM Ratings";                     //mk42 - 8/8 - fetches ratings from table
 $total_ratings_stmt = $db->prepare($total_ratings_query);
@@ -80,7 +96,7 @@ require(__DIR__ . "/../../partials/flash.php");
                         <?php if (has_role("Admin")): ?>
                             <input type="submit" value="Update">
                         <?php else: ?>
-                            <!-- You can either hide the button or display a disabled button for non-admin users -->
+                  
                         <?php endif; ?>
                     </form>
                 </td>
