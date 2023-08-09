@@ -10,30 +10,29 @@ $movies = [];
 $users = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Search for movies
+    
     $movieSearchTerm = isset($_POST['movie-search']) ? $_POST['movie-search'] : '';
-    $queryMovies = "SELECT DISTINCT movie_title, image_url FROM Watchlist WHERE movie_title LIKE :term";
+    $queryMovies = "SELECT DISTINCT movie_title, image_url FROM Watchlist WHERE movie_title LIKE :term";                    // mk42-8/8 - Search for movies
     $stmtMovies = $db->prepare($queryMovies);
     $stmtMovies->execute([':term' => '%' . $movieSearchTerm . '%']);
     $movies = $stmtMovies->fetchAll(PDO::FETCH_ASSOC);
 
-    // Search for users
-    $userSearchTerm = $_POST['user-search'];
-    $userSearchTerm = isset($_POST['user-search']) ? $_POST['user-search'] : '';
+    
+    $userSearchTerm = isset($_POST['user-search']) ? $_POST['user-search'] : '';                                            // mk42-8/8 - Search for users
     $queryUsers = "SELECT id, username FROM Users WHERE username LIKE :term";
     $stmtUsers = $db->prepare($queryUsers);
     $stmtUsers->execute([':term' => '%' . $userSearchTerm . '%']);
     $users = $stmtUsers->fetchAll(PDO::FETCH_ASSOC);
 
-    // If adding to recommended watchlist
-    if (isset($_POST['selected-movie'], $_POST['selected-user'])) {
+    
+    if (isset($_POST['selected-movie'], $_POST['selected-user'])) {                                                         // mk42-8/8 - adding to recommended watchlist
         $selectedMovies = $_POST['selected-movie'];
         $selectedUsers = $_POST['selected-user'];
 
         foreach ($selectedMovies as $selectedMovieJson) {
             $selectedMovie = json_decode($selectedMovieJson, true);
             foreach ($selectedUsers as $selectedUser) {
-                // Add selected movie to selected user's recommended watchlist
+                
                 $queryAdd = "INSERT INTO Watchlist (user_id, movie_title, image_url, recommended) VALUES (:user_id, :movie_title, :image_url, 1)";
                 $stmtAdd = $db->prepare($queryAdd);
                 $stmtAdd->execute([
@@ -43,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
             }
         }
-        flash("Movies added to recommended watchlists successfully!");
+        flash("Movies added to recommended watchlists successfully!", "success");
     }
 }
 ?>
