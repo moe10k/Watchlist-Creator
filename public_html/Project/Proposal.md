@@ -1,9 +1,9 @@
-## Project Name: (Which Project)
-### Project Summary: (Copy from proposal)
+## Project Name: Movie Database Project
+### Project Summary: This project will primarily use data pull from an API to do something
 ### Github Link: [https://github.com/mohammad-kiyam/mk42-IT202-450/tree/prod/public_html/Project](https://github.com/mohammad-kiyam/mk42-IT202-450/tree/prod/public_html/Project)
-### Project Board Link: 
+### Project Board Link: https://github.com/users/mohammad-kiyam/projects/1
 ### Website Link: https://mk42-prod.herokuapp.com/Project
-### API Link: (the link to the documentation of your chosen API)
+### API Link: https://rapidapi.com/apidojo/api/online-movie-database
 ### Your Name: Mohammad Kiyam 
 
  
@@ -11,13 +11,12 @@
 ### Proposal Checklist and Evidence
 
 - Milestone 1
-  - (add link to milestone1.md from milestone1 branch)  
+  - https://github.com/mohammad-kiyam/mk42-IT202-450/blob/Milestone1/public_html/Project/milestone1.md
 - Milestone 2
-  - (add link to milestone2.md from milestone2 branch)
+  - https://github.com/mohammad-kiyam/mk42-IT202-450/blob/Milestone2/public_html/Project/milestone2.md
 - Milestone 3
-  - (add link to milestone3.md from milestone3 branch)
-- Milestone 4
-  - (add link to milestone4.md from milestone4 branch)
+  - https://github.com/mohammad-kiyam/mk42-IT202-450/blob/Milestone3/public_html/Project/milestone3.md
+
 - Demo Link
-  - (add youtube link to unlisted or public demo) Note you'll need to verify your youtube account to upload videos > 15mins
+  - https://youtu.be/FDzXqqdX6x0
   
