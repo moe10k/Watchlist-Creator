@@ -5,14 +5,20 @@ $user_id = get_user_id();
 $db = getDB();
 
 if (isset($_POST["remove_movies"])) {
-    $movies_to_remove = $_POST["remove_movies"];
-    flash('Movie Successfully Removed', "success");
+    $movies_to_remove = $_POST["remove_movies"];                                                    //mk42 - 8/9 - removes selected movies function
+    $stmt = $db->prepare("DELETE FROM Watchlist WHERE user_id = ? AND movie_title = ?"); 
 
-    $inQuery = implode(',', array_fill(0, count($movies_to_remove), '?'));
-    array_unshift($movies_to_remove, $user_id);
-    $stmt = $db->prepare("DELETE FROM Watchlist WHERE user_id = ? AND movie_title IN ($inQuery)");
+    foreach ($movies_to_remove as $movie_title) {
+        $stmt->execute([$user_id, $movie_title]);
+        flash("Movie Successfully Removed: " . htmlspecialchars($movie_title), "success");
+    }
+}
 
-    $stmt->execute($movies_to_remove);
+
+if (isset($_POST["remove_all_movies"])) {                                                           //mk42 - 8/9 - removes all movies function
+    $stmt = $db->prepare("DELETE FROM Watchlist WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    flash('All movies have been successfully removed', "success");
 }
 
 $order = "DESC"; // default order
@@ -29,7 +35,7 @@ if (isset($_POST['limit']) && is_numeric($_POST['limit']) && $_POST['limit'] > 0
 }
 
 if ($limit < 1 || $limit > 100) {
-    flash('Not within range of 1-100', 'warning'); //mk42 - 8/7 - server side validation to default limit to 10
+    flash('Not within range of 1-100', 'warning');                                                  //mk42 - 8/7 - server side validation to default limit to 10
     $limit = 10;
 }
 
@@ -72,6 +78,14 @@ if (is_logged_in(true)) {
     error_log("Session data: " . var_export($_SESSION, true));
 }
 
+
+
+echo '<form method="POST">';
+    echo '<input type="hidden" name="remove_all_movies" value="1">';              //mk42 - 8/9 - removes all movies button
+    echo '<input id="removeallbutton" type="submit" value="Remove All Movies">';
+echo'</form>';
+
+
 if ($movies) {
     echo '<h1 class="movie-title">Movies</h1>';
     echo '<form id="watchlist-form" method="POST" onsubmit="return checkForm()">';
@@ -93,11 +107,12 @@ if ($movies) {
     }
     echo '</ul>';
     echo '</div>';
-    echo '<input type="submit" value="Remove Selected Movies">';
+    echo '<input type="submit" value="Remove Selected Movies">';           //mk42-8/9-removes selected movies button
     echo '</form>';
 } else {
     echo 'No movies in your watchlist.';
 }
+
 
 require(__DIR__ . "/../../partials/flash.php");
 ?>

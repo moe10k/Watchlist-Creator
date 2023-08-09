@@ -2,31 +2,77 @@
 require(__DIR__ . "/../../partials/nav.php");
 $db = getDB();
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['rating']) && isset($_POST['user_id']) && isset($_POST['movie_title'])) {
+    if (has_role("Admin")) {
+        $rating = (int)$_POST['rating'];
+        $user_id = (int)$_POST['user_id'];
+        $movie_title = $_POST['movie_title'];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['rating'])) {
-    $user_id = $_POST['user_id'];
-    $movie_title = $_POST['movie_title'];
-    $rating = (int)$_POST['rating'];
-
-   
-    $query = "UPDATE Ratings SET rating = :rating WHERE user_id = :user_id AND movie_title = :movie_title";
-    $stmt = $db->prepare($query);
-    $stmt->execute([":rating" => $rating, ":user_id" => $user_id, ":movie_title" => $movie_title]);
-    flash('Rating updated successfully!', 'success');
+        if ($rating >= 1 && $rating <= 10) {
+            $stmt = $db->prepare("UPDATE Ratings SET rating = :rating WHERE user_id = :user_id AND movie_title = :movie_title");
+            $stmt->execute([":rating" => $rating, ":user_id" => $user_id, ":movie_title" => $movie_title]);
+            flash('Rating updated successfully!', 'success');
+        } else {
+            flash('Rating must be between 1 and 10', 'danger');
+        }
+    } else {
+        flash('You do not have permission to update ratings', 'danger');
+    }
 }
 
+$total_ratings_query = "SELECT COUNT(*) as total_ratings FROM Ratings";                     //mk42 - 8/8 - fetches ratings from table
+$total_ratings_stmt = $db->prepare($total_ratings_query);
+$total_ratings_stmt->execute();
+$total_ratings_row = $total_ratings_stmt->fetch(PDO::FETCH_ASSOC);
+$total_ratings = $total_ratings_row['total_ratings'];
+
+$username_filter = "";
+$limit = 10;                                                                                 //mk42 - 8/8 -  Default limit is set to 10 for the filter
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    if (isset($_GET['username'])) {
+        $username_filter = $_GET['username'];
+    }
+    if (isset($_GET['limit']) && $_GET['limit'] >= 1 && $_GET['limit'] <= 100) {
+        $limit = (int)$_GET['limit'];
+    }
+}
 
 $query = "SELECT Ratings.user_id, Users.username, Ratings.movie_title, Ratings.rating 
           FROM Ratings 
-          JOIN Users ON Ratings.user_id = Users.id 
-          ORDER BY Users.username ASC, Ratings.movie_title ASC";
+          JOIN Users ON Ratings.user_id = Users.id";
+
+if ($username_filter) {
+    $query .= " WHERE Users.username LIKE :username";
+}
+
+$query .= " ORDER BY Users.username ASC, Ratings.movie_title ASC";
+$query .= " LIMIT " . $limit; 
 $stmt = $db->prepare($query);
-$stmt->execute();
+
+if ($username_filter) {
+    $stmt->execute([":username" => "%$username_filter%"]);
+} else {
+    $stmt->execute();
+}
+
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 require(__DIR__ . "/../../partials/flash.php");
 ?>
 
+<form action="" method="get">
+    <label for="username">Search by Username:</label>
+    <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($username_filter); ?>">      <!-- mk42 - 8/8 - filter/sort search by username -->
+    
+    <label for="limit">Show Reviews:</label>
+    <input type="number" id="limit" name="limit" min="1" max="100" value="<?php echo $limit; ?>">                    <!-- mk42 - 8/8 - filter/sort by number of ratings seen at once -->
+    
+    <input type="submit" value="Search">
+</form>
+
+
 <h1>All User Ratings</h1>
+<p id='watchlisttitle'>Total Ratings Submitted: <?php echo $total_ratings; ?></p>
 <table id='movie-table'>
     <thead>
         <tr>
@@ -50,7 +96,7 @@ require(__DIR__ . "/../../partials/flash.php");
                         <?php if (has_role("Admin")): ?>
                             <input type="submit" value="Update">
                         <?php else: ?>
-                            <!-- You can either hide the button or display a disabled button for non-admin users -->
+                  
                         <?php endif; ?>
                     </form>
                 </td>
