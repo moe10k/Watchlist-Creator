@@ -189,6 +189,10 @@ form input[type="password"] {
     background-color: rgb(76, 76, 220);
 }
 
+#dashboardh1{
+    color: whitesmoke;
+}
+
 
 
 
@@ -346,5 +350,55 @@ form#watchlist-form {
 }
 
 
+
+
+
+
+
+#home {
+    background: url('homebackground.jpg') no-repeat center center fixed;
+    background-size: cover; 
+}
+
+.homecontainer {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#homeh1 {
+    color: whitesmoke;
+    border-bottom: 1px solid #cccccc;
+    padding-bottom: 10px;
+}
+
+.instructions {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.instructions li {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    position: relative;
+    font-size: 1.2em; 
+    font-weight: 500; 
+    line-height: 1.5; 
+}
+
+.instructions li:before {
+    content: '\2022';
+    position: absolute;
+    left: -25px; 
+    font-size: 1.5em;
+    color: #333333;
+}
 
 
