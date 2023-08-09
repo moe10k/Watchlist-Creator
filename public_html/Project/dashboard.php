@@ -5,7 +5,7 @@ require(__DIR__ . "/../../partials/nav.php");
 ?>
 
 <body id = 'dashboard'>
-<h1>Dashboard</h1>
+<h1 id="dashboardh1">Dashboard</h1>
 </body>
 
 
