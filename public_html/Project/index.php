@@ -1,3 +1,6 @@
 <?php
 require(__DIR__ . "/../../lib/functions.php");
-die(header("Location: $BASE_PATH/login.php"));
+// Redirect to the login page
+header("Location: login.php");
+exit();
+?>
