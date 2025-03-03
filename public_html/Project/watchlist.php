@@ -5,7 +5,7 @@ $user_id = get_user_id();
 $db = getDB();
 
 if (isset($_POST["remove_movies"])) {
-    $movies_to_remove = $_POST["remove_movies"];                                                    //mk42 - 8/9 - removes selected movies function
+    $movies_to_remove = $_POST["remove_movies"];
     $stmt = $db->prepare("DELETE FROM Watchlist WHERE user_id = ? AND movie_title = ?"); 
 
     foreach ($movies_to_remove as $movie_title) {
@@ -14,8 +14,7 @@ if (isset($_POST["remove_movies"])) {
     }
 }
 
-
-if (isset($_POST["remove_all_movies"])) {                                                           //mk42 - 8/9 - removes all movies function
+if (isset($_POST["remove_all_movies"])) {
     $stmt = $db->prepare("DELETE FROM Watchlist WHERE user_id = ?");
     $stmt->execute([$user_id]);
     flash('All movies have been successfully removed', "success");
@@ -31,11 +30,10 @@ if (isset($_POST['filter'])) {
 $limit = 10; // default limit
 if (isset($_POST['limit']) && is_numeric($_POST['limit']) && $_POST['limit'] > 0) {
     $limit = (int)$_POST['limit']; 
-    flash("Showing $limit movies", "success");
 }
 
 if ($limit < 1 || $limit > 100) {
-    flash('Not within range of 1-100', 'warning');                                                  //mk42 - 8/7 - server side validation to default limit to 10
+    flash('Limit must be between 1 and 100', 'warning');
     $limit = 10;
 }
 
@@ -49,73 +47,269 @@ $userStmt = $db->prepare($userQuery);
 $userStmt->execute([":user_id" => $user_id]);
 $username = $userStmt->fetchColumn();
 
-
 $countQuery = "SELECT COUNT(*) FROM Watchlist WHERE user_id = :user_id";
 $stmt = $db->prepare($countQuery);
 $stmt->execute([":user_id" => $user_id]);
 $totalMovies = $stmt->fetchColumn();
-echo "<h1 id='watchlisttitle'>$username's Watchlist (Total: $totalMovies)</h1>";
-
-
-
 ?>
 
-<form method="POST" id="filterForm">
-    <label for="filter">Sort:</label>
-    <select id="filter" name="filter">
-        <option value="newest" <?php echo $order=="DESC"?'selected':''; ?>>Newest First</option>
-        <option value="oldest" <?php echo $order=="ASC"?'selected':''; ?>>Oldest First</option>
-    </select>
-    <label for="limit">Show:</label>
-    <input id="limit" name="limit" type="number" value="<?php echo $limit; ?>">
-    <input type="submit" value="Apply Filter">
-</form>
+<div class="container">
+    <h1 id="watchlisttitle"><?php echo htmlspecialchars($username); ?>'s Watchlist <span class="badge">(<?php echo $totalMovies; ?> movies)</span></h1>
 
-<?php
+    <form method="POST" id="filterForm" class="filter-controls">
+        <div class="filter-group">
+            <label for="filter">Sort by:</label>
+            <select id="filter" name="filter" class="form-control">
+                <option value="newest" <?php echo $order=="DESC"?'selected':''; ?>>Newest First</option>
+                <option value="oldest" <?php echo $order=="ASC"?'selected':''; ?>>Oldest First</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label for="limit">Show:</label>
+            <input id="limit" name="limit" type="number" min="1" max="100" value="<?php echo $limit; ?>" class="form-control">
+            <span>movies</span>
+        </div>
+        
+        <button type="submit" class="btn-filter">Apply Filters</button>
+    </form>
 
-if (is_logged_in(true)) {
-    //comment this out if you don't want to see the session variables
-    error_log("Session data: " . var_export($_SESSION, true));
+    <?php if ($movies): ?>
+        <div class="watchlist-actions">
+            <form method="POST" onsubmit="return confirm('Are you sure you want to remove all movies from your watchlist?');">
+                <input type="hidden" name="remove_all_movies" value="1">
+                <button type="submit" id="removeallbutton">Remove All Movies</button>
+            </form>
+        </div>
+        
+        <form id="watchlist-form" method="POST" onsubmit="return checkForm()">
+            <div id="watchlist-content">
+                <div class="movie-grid">
+                    <?php foreach ($movies as $movie): ?>
+                        <div class="movie-card">
+                            <div class="movie-card-header">
+                                <input type="checkbox" name="remove_movies[]" value="<?php echo htmlspecialchars($movie["movie_title"]); ?>" class="movie-checkbox">
+                                <h3 class="movie-title"><?php echo htmlspecialchars($movie["movie_title"]); ?></h3>
+                            </div>
+                            
+                            <?php if ($movie["image_url"]): ?>
+                                <div class="movie-poster">
+                                    <img src="<?php echo htmlspecialchars($movie["image_url"]); ?>" alt="Movie Poster">
+                                </div>
+                            <?php endif; ?>
+                            
+                            <div class="movie-actions">
+                                <a href="movie_details.php?movie_title=<?php echo urlencode($movie['movie_title']); ?>" class="btn-view">View Details</a>
+                                
+                                <div class="rating-control">
+                                    <label for="rating-<?php echo htmlspecialchars($movie["movie_title"]); ?>">Rate:</label>
+                                    <input type="number" name="rating[<?php echo htmlspecialchars($movie["movie_title"]); ?>]" min="1" max="10" id="rating-<?php echo htmlspecialchars($movie["movie_title"]); ?>" class="rating-input">
+                                    <button type="button" class="btn-rate" onclick="submitRating('<?php echo htmlspecialchars($movie["movie_title"]); ?>')">Rate</button>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-remove">Remove Selected Movies</button>
+            </div>
+        </form>
+    <?php else: ?>
+        <div class="empty-state">
+            <p>Your watchlist is empty. Add some movies from the <a href="dashboard.php">Dashboard</a>!</p>
+        </div>
+    <?php endif; ?>
+</div>
+
+<style>
+.container {
+    padding: 2rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    margin: 2rem auto;
+    max-width: 1200px;
 }
 
+.badge {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: normal;
+}
 
+.filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    max-width: 100%;
+}
 
-echo '<form method="POST">';
-    echo '<input type="hidden" name="remove_all_movies" value="1">';              //mk42 - 8/9 - removes all movies button
-    echo '<input id="removeallbutton" type="submit" value="Remove All Movies">';
-echo'</form>';
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
 
+.form-control {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
 
-if ($movies) {
-    echo '<h1 class="movie-title">Movies</h1>';
-    echo '<form id="watchlist-form" method="POST" onsubmit="return checkForm()">';
-    echo '<div id="watchlist-content">';
-    echo '<ul>';
-    foreach ($movies as $movie) {
-        echo '<li>';
-        echo '<input type="checkbox" name="remove_movies[]" value="' . htmlspecialchars($movie["movie_title"]) . '">';
-        echo '<h2 class="movie-title">' . htmlspecialchars($movie["movie_title"]) . '</h2>';
-        if ($movie["image_url"]) {
-            echo '<img src="' . htmlspecialchars($movie["image_url"]) . '" alt="Movie Poster" style="max-width: 200px; max-height: 300px;">';
-            echo '<a href="movie_details.php?movie_title=' . urlencode($movie['movie_title']) . '">View Details</a>';
-        }
+.btn-filter {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
 
-        echo '<label for="rating-' . htmlspecialchars($movie["movie_title"]) . '">Rate:</label>';
-        echo '<input type="number" name="rating[' . htmlspecialchars($movie["movie_title"]) . ']" min="1" max="10" id="rating-' . htmlspecialchars($movie["movie_title"]) . '">';
-        echo '<button type="button" onclick="submitRating(\'' . htmlspecialchars($movie["movie_title"]) . '\')">Submit Rating</button>';
-        echo '</li>';
+.watchlist-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.movie-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.movie-card-header {
+    padding: 1rem;
+    display: flex;
+    align-items: flex-start;
+}
+
+.movie-checkbox {
+    margin-right: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.movie-poster {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+
+.movie-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.movie-card:hover .movie-poster img {
+    transform: scale(1.05);
+}
+
+.movie-actions {
+    padding: 1rem;
+}
+
+.btn-view {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    margin-bottom: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-view:hover {
+    background-color: var(--accent-color);
+    color: white;
+    text-decoration: none;
+}
+
+.rating-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.rating-input {
+    width: 60px;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn-rate {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-actions {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.btn-remove {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 2rem;
+}
+
+.empty-state p {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+@media (max-width: 768px) {
+    .filter-controls {
+        flex-direction: column;
+        align-items: flex-start;
     }
-    echo '</ul>';
-    echo '</div>';
-    echo '<input type="submit" value="Remove Selected Movies">';           //mk42-8/9-removes selected movies button
-    echo '</form>';
-} else {
-    echo 'No movies in your watchlist.';
+    
+    .movie-grid {
+        grid-template-columns: 1fr;
+    }
 }
-
-
-require(__DIR__ . "/../../partials/flash.php");
-?>
+</style>
 
 <script>
     function checkForm() {
@@ -129,32 +323,34 @@ require(__DIR__ . "/../../partials/flash.php");
     }
 
     document.getElementById('filterForm').addEventListener('submit', function(event) {
-    var limitInput = document.getElementById('limit');
-    if (limitInput.value < 1) {
-        event.preventDefault();
-        flash('Please enter a positive number that is greater than 0', "danger");
-    }
-});
-
-function submitRating(movieTitle) {
-    var rating = document.getElementById('rating-' + movieTitle).value;
-    
-    if (rating < 1 || rating > 10) {
-        flash('Rating must be between 1 and 10', 'warning');
-        return;
-    }
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'save_ratings.php', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            flash('Rating saved successfully!', 'success');
+        var limitInput = document.getElementById('limit');
+        if (limitInput.value < 1 || limitInput.value > 100) {
+            event.preventDefault();
+            flash('Please enter a number between 1 and 100', "danger");
         }
-    };
+    });
 
-    var params = 'movie_title=' + encodeURIComponent(movieTitle) + '&rating=' + encodeURIComponent(rating);
-    xhr.send(params);
-}
+    function submitRating(movieTitle) {
+        var rating = document.getElementById('rating-' + movieTitle).value;
+        
+        if (rating < 1 || rating > 10) {
+            flash('Rating must be between 1 and 10', 'warning');
+            return;
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'save_ratings.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                flash('Rating saved successfully!', 'success');
+            }
+        };
+
+        var params = 'movie_title=' + encodeURIComponent(movieTitle) + '&rating=' + encodeURIComponent(rating);
+        xhr.send(params);
+    }
 </script>
+
+<?php require(__DIR__ . "/../../partials/flash.php"); ?>
