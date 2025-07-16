@@ -1,22 +1,78 @@
 <?php
 require_once(__DIR__ . "/../../partials/nav.php");
 ?>
-<form id="login" onsubmit="return validate(this)" method="POST">
-    <h1>Login</h1>
-    <div>
-        <label for="email">Email/Username</label>
-        <input type="text" name="email" required />
+
+<div class="container">
+    <div class="auth-container">
+        <form id="login" onsubmit="return validate(this)" method="POST">
+            <h1>Login</h1>
+            <div>
+                <label for="email">Email/Username</label>
+                <input type="text" name="email" required placeholder="Enter your email or username" />
+            </div>
+            <div>
+                <label for="pw">Password</label>
+                <input type="password" id="pw" name="password" required minlength="8" placeholder="Enter your password" />
+            </div>
+            <input type="submit" value="Login" class="btn-primary" />
+            <div class="auth-links">
+                <p>Don't have an account? <a href="register.php">Register</a></p>
+            </div>
+        </form>
     </div>
-    <div>
-        <label for="pw">Password</label>
-        <input type="password" id="pw" name="password" required minlength="8" />
-    </div>
-    <input type="submit" value="Login" />
-</form>
+</div>
+
+<style>
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+#login {
+    width: 100%;
+    max-width: 400px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.btn-primary {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-color);
+}
+
+.auth-links {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.auth-links a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.auth-links a:hover {
+    text-decoration: underline;
+}
+</style>
+
 <script>
     function validate(form) {
-        //TODO 1: implement JavaScript validation
-        //ensure it returns false for an error and true for success
         let email = form.email.value;
         let password = form.password.value;
         let regexforemail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -33,35 +89,20 @@ require_once(__DIR__ . "/../../partials/nav.php");
         return true;
     }
 </script>
-<?php
-//TODO 2: add PHP Code
-if (isset($_POST["email"]) && isset($_POST["password"])) {
-    $email = se($_POST, "email", "", false); //$_POST["email"];
-    $password = se($_POST, "password", "", false); //$_POST["password"];
 
-    //TODO 3
+<?php
+if (isset($_POST["email"]) && isset($_POST["password"])) {
+    $email = se($_POST, "email", "", false);
+    $password = se($_POST, "password", "", false);
+
     $hasError = false;
     if (empty($email)) {
         flash("Email must be provided <br>");
         $hasError = true;
     }
-    //sanitize
-    //$email = filter_var($email, FILTER_SANITIZE_EMAIL);
    
-    //validate
-    /*if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        flash("Please enter a valid email <br>");
-        $hasError = true;
-    }*/
     if (str_contains($email, "@")) {
-        //sanitize
-        //$email = filter_var($email, FILTER_SANITIZE_EMAIL);
         $email = sanitize_email($email);
-        //validate
-        /*if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            flash("Invalid email address");
-            $hasError = true;
-        }*/
         if (!is_valid_email($email)) {
             flash("Invalid email address");
             $hasError = true;
@@ -81,7 +122,6 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
         $hasError = true;
     }
     if (!$hasError) {
-        //TODO 4
         $db = getDB();
         $stmt = $db->prepare("SELECT id, email, username, password from Users where email = :email or username = :email");
         try {

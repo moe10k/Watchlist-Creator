@@ -1,5 +1,15 @@
-.idea
-vendor/
+# Ignore environment variables
 .env
-.vscode
-.vs
+
+# Ignore vendor directory
+/vendor/
+
+# Ignore IDE files
+.idea/
+.vscode/
+
+# Ignore logs
+*.log
+
+# Ignore cache files
+*.cache
